@@ -60,7 +60,7 @@ Estrewn
 <center><h3>A pile of digital content</h3></center>
 
 <center>
-<video width="320" height="240" controls>
+<video width="640" height="480" controls>
   <source src="/video" type="video/mp4">
 </video>
 </center>
