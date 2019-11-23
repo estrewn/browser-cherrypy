@@ -6,6 +6,7 @@ import mimetypes
 
 from cherrypy.lib import static
 
+from upload import Upload
 
 class Video(object):
     @cherrypy.expose
@@ -40,7 +41,7 @@ class Root(object):
         'response.stream': True
     }
 
-
+    upload = Upload()
     
     @cherrypy.expose
     def index(self):
