@@ -17,7 +17,8 @@ cherrypy.tools.auth = cherrypy.Tool('before_handler', redirect_if_authentication
 if __name__ == '__main__':
     cherrypy.config.update({'server.socket_port': 443}) #port 443 for https or port 80 for http
 #    cherrypy.config.update({'server.socket_port': 80})
-    cherrypy.config.update({'server.socket_host': 'ec2-18-237-18-174.us-west-2.compute.amazonaws.com'})
+#    cherrypy.config.update({'server.socket_host': 'ec2-18-237-18-174.us-west-2.compute.amazonaws.com'})
+    cherrypy.config.update({'server.socket_host': '10.0.0.136'})
     
 
     #cherrypy.tree.mount(Root())

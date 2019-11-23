@@ -1,5 +1,4 @@
 import cherrypy
-
 class Root(object):
 
     @cherrypy.expose
@@ -15,7 +14,8 @@ class Root(object):
 
 if __name__ == '__main__':
     cherrypy.config.update({'server.socket_port': 80})
-    cherrypy.config.update({'server.socket_host': 'ec2-18-237-18-174.us-west-2.compute.amazonaws.com'})
+    cherrypy.config.update({'server.socket_host': '10.0.0.136'})
+#    cherrypy.config.update({'server.socket_host': '127.0.0.1'})
 
     cherrypy.tree.mount(Root())
     cherrypy.engine.start()

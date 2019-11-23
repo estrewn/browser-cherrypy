@@ -11,25 +11,18 @@ import mailbox
 from email.MIMEMultipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.MIMEText import MIMEText
-from email.Utils import COMMASPACE, formatdate
 
 import time
 
 import re
 
-import html_strings
-
-from require import require
-
 import random
 
-import utils
 
 import json
 
 class Upload(object):
     @cherrypy.expose
-    @require()
     def index(self):
 
         is_mobile = False
@@ -44,8 +37,6 @@ class Upload(object):
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-"""+html_strings.google_adsense_conversion_tracking_global_site_tag+html_strings.google_adsense_conversion_tracking_event_snippet+"""
 
 <title>
 Ecommunicate
@@ -111,8 +102,6 @@ nav.open {
 <nav id="drawer" style="background-color:LightGrey">
 
 <center><h2 style="margin-top:0">Ecommunicate</h2></center>
-
-"""+(html_strings.authenticated_mobile_navigation_menu if utils.is_session_authenticated() else html_strings.not_authenticated_mobile_navigation_menu)+"""
 
 </nav>
 
@@ -280,13 +269,10 @@ width: 100%;
 
 .nonheader { width:960px; margin: 80px auto 0px auto;  }
 
-"""+html_strings.header_style+"""
 </style>
 <title>Ecommunicate</title>
 </head>
 <body>
-"""+(html_strings.authenticated_header if utils.is_session_authenticated() else html_strings.not_authenticated_header)+"""
-
 <div class = "nonheader">
 
 <center>
@@ -447,7 +433,6 @@ var formdata = new FormData($(this)[0]);
             msg['CC'] = COMMASPACE.join(send_cc)
             msg['Date'] = formatdate(localtime=True)
             msg['Subject'] = subject
-            msg['Message-ID'] = email.Utils.make_msgid()
 
             mime_applications = []
 
