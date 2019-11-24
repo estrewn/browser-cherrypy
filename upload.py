@@ -129,28 +129,15 @@ nav.open {
 
 <center>
    <form id="compose_email_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
-   to: <br><br>
-   <input type="text" id="to" name="to" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
-   cc: <br><br>
-   <input type="text" id="cc" name="cc" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
-   subject: <br><br>
-   <input type="text" id="subject" name="subject" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
-   attachments: <br><br>
+   video: <br><br>
    <input type="file" id="attachment1" name="attachment1"/>
-   <input type="file" id="attachment2" name="attachment2" style="display:none;"/>
-   <input type="file" id="attachment3" name="attachment3" style="display:none;"/>
-   <input type="file" id="attachment4" name="attachment4" style="display:none;"/>
-   <input type="file" id="attachment5" name="attachment5" style="display:none;"/>
-   <input type="file" id="attachment6" name="attachment6" style="display:none;"/>
-   <input type="file" id="attachment7" name="attachment7" style="display:none;"/>
-   <input type="file" id="attachment8" name="attachment8" style="display:none;"/>
-   <input type="file" id="attachment9" name="attachment9" style="display:none;"/>
-   <input type="file" id="attachment10" name="attachment10" style="display:none;"/>
    <br><br>
-   body: <br><br>
+   title: <br><br>
+   <input type="text" id="subject" name="subject" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
+   description: <br><br>
    <textarea name="body" rows="30" cols="120" style="width:100%;border:2px solid black;font-size:120%;outline:none;"></textarea> <br><br>
   <button id="send" type="submit">
-  Send
+  Upload
   </button>
   </form>
   <iframe name="console_iframe" id="console_iframe" class="terminal" /></iframe>
@@ -277,28 +264,16 @@ width: 100%;
 
 <center>
    <form id="compose_email_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
-   to: <br><br>
-   <input type="text" id="to" name="to" size="100" /><br><br>
-   cc: <br><br>
-   <input type="text" id="cc" name="cc" size="100" /><br><br>
-   subject: <br><br>
-   <input type="text" id="subject" name="subject" size="100" /><br><br>
-   attachments: <br><br>
+   video: <br><br>
    <input type="file" id="attachment1" name="attachment1"/>
-   <input type="file" id="attachment2" name="attachment2" style="display:none;"/>
-   <input type="file" id="attachment3" name="attachment3" style="display:none;"/>
-   <input type="file" id="attachment4" name="attachment4" style="display:none;"/>
-   <input type="file" id="attachment5" name="attachment5" style="display:none;"/>
-   <input type="file" id="attachment6" name="attachment6" style="display:none;"/>
-   <input type="file" id="attachment7" name="attachment7" style="display:none;"/>
-   <input type="file" id="attachment8" name="attachment8" style="display:none;"/>
-   <input type="file" id="attachment9" name="attachment9" style="display:none;"/>
-   <input type="file" id="attachment10" name="attachment10" style="display:none;"/>
    <br><br>
-   body: <br><br>
+   title: <br><br>
+   <input type="text" id="subject" name="subject" size="100" /><br><br>
+   <br><br>
+   description: <br><br>
    <textarea name="body" rows="30" cols="120"></textarea> <br><br>
   <button id="send" type="submit">
-  Send
+  Upload
   </button>
   </form>
   <iframe name="console_iframe" id="console_iframe" class="terminal" /></iframe>
@@ -310,15 +285,6 @@ width: 100%;
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script>
 $('#attachment1').click(function(event) { $('#attachment2').css('display','block')  });
-$('#attachment2').click(function(event) { $('#attachment3').css('display','block')  });
-$('#attachment3').click(function(event) { $('#attachment4').css('display','block')  });
-$('#attachment4').click(function(event) { $('#attachment5').css('display','block')  });
-$('#attachment5').click(function(event) { $('#attachment6').css('display','block')  });
-$('#attachment6').click(function(event) { $('#attachment7').css('display','block')  });
-$('#attachment7').click(function(event) { $('#attachment8').css('display','block')  });
-$('#attachment8').click(function(event) { $('#attachment9').css('display','block')  });
-$('#attachment9').click(function(event) { $('#attachment10').css('display','block')  });
-
 
 $('#compose_email_form').submit(function(event) {
 
@@ -384,9 +350,9 @@ var formdata = new FormData($(this)[0]);
         return html_string
 
     @cherrypy.expose
-    def send(self, to, cc, subject, attachment1, attachment2, attachment3, attachment4, attachment5, attachment6, attachment7, attachment8, attachment9, attachment10, body):
+    def send(self, to, cc, subject, attachment1, body):
 
-        attachments = [attachment1, attachment2, attachment3, attachment4, attachment5, attachment6, attachment7, attachment8, attachment9, attachment10]
+        attachments = [attachment1]
 
         def send_function():
 
@@ -396,51 +362,22 @@ var formdata = new FormData($(this)[0]);
 
             json_object["errors"] = []
 
-            print "to:"
-            print to
-            print "cc:"
-            print cc
-            print "subject:"
-            print subject
-            print "body:"
-            print body
-
-            msg = MIMEMultipart()
-            send_from = cherrypy.session.get('_cp_username')+"@ecommunicate.ch"
-            #msg['From'] = 
-            send_to = re.findall(r'[^\;\,\s]+',to)
-            send_cc = re.findall(r'[^\;\,\s]+',cc)
-
-            if to == "":
-                json_object["success"] = False
-                json_object["errors"].append("to is empty.")
-                print json.dumps(json_object)
-                return json.dumps(json_object)
-
-            for email_address in (send_to + send_cc):
-                if len(email_address.split("@")) != 2:
-                    json_object["success"] = False
-                    json_object["errors"].append("Each e-mail address must contain one @ symbol.")
-                    print json.dumps(json_object)
-                    return json.dumps(json_object)
-                if email_address.split("@")[1] != "ecommunicate.ch":
-                    json_object["success"] = False
-                    json_object["errors"].append("Can only send e-mails to other ecommunicate.ch e-mail addresses.")
-                    print json.dumps(json_object)
-                    return json.dumps(json_object)
-
-            msg['To'] = COMMASPACE.join(send_to)
-            msg['CC'] = COMMASPACE.join(send_cc)
-            msg['Date'] = formatdate(localtime=True)
-            msg['Subject'] = subject
-
-            mime_applications = []
-
-            l = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
-
             if len(attachments) > 36:
                 raise Exception
 
+            dbname = "estrewn"
+            
+            secrets_file=open("/home/ec2-user/secrets.txt")
+            passwords=secrets_file.read().rstrip('\n')
+            db_password = passwords.split('\n')[0]
+
+            conn = MySQLdb.connect(host='estrewn-production-instance-1.cphov5mfizlt.us-west-2.rds.amazonaws.com', user='browser', passwd=db_password, port=3306) 
+            
+            curs = conn.cursor()
+            curs.execute("use "+str(dbname)+";")
+            curs.execute("insert into videos values(%s,%s,now(6),%s)", ("a","b",MySQLdb.Binary(open("/home/ec2-user/1562534978890.mp4","rb").read())))
+            conn.commit()
+            
             for i,attachment in enumerate(attachments):
                 if attachment.file != None and attachment.filename != "":
                     tmp_filename=os.popen("mktemp").read().rstrip('\n')
