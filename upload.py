@@ -130,7 +130,7 @@ nav.open {
 <center>
    <form id="compose_email_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
    video: <br><br>
-   <input type="file" id="attachment1" name="attachment1"/>
+   <input type="file" id="attachment" name="attachment"/>
    <br><br>
    title: <br><br>
    <input type="text" id="title" name="title" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
@@ -168,16 +168,6 @@ main.addEventListener('touchstart', function() {
     drawer.classList.remove('open');
 });
 
-$('#attachment1').click(function(event) { $('#attachment2').css('display','block')  });
-$('#attachment2').click(function(event) { $('#attachment3').css('display','block')  });
-$('#attachment3').click(function(event) { $('#attachment4').css('display','block')  });
-$('#attachment4').click(function(event) { $('#attachment5').css('display','block')  });
-$('#attachment5').click(function(event) { $('#attachment6').css('display','block')  });
-$('#attachment6').click(function(event) { $('#attachment7').css('display','block')  });
-$('#attachment7').click(function(event) { $('#attachment8').css('display','block')  });
-$('#attachment8').click(function(event) { $('#attachment9').css('display','block')  });
-$('#attachment9').click(function(event) { $('#attachment10').css('display','block')  });
-
 
 $('#compose_email_form').submit(function(event) {
 
@@ -210,7 +200,7 @@ var formdata = new FormData($(this)[0]);
             console_iframe.contentWindow.document.open();
             console_iframe.contentWindow.document.close();
 
-            console_iframe.contentWindow.document.write('<center style="color:blue;font-size:20px;font-weight:bold">'+"E-mail sent succesfully."+'</center>');
+            console_iframe.contentWindow.document.write('<center style="color:blue;font-size:20px;font-weight:bold">'+"Video uploaded successfully."+'</center>');
 
         }
 
@@ -229,7 +219,7 @@ var formdata = new FormData($(this)[0]);
       error : function (data) {
         var console_iframe = document.getElementById('console_iframe');
 
-        console_iframe.write("Error. E-mail not sent succesfully.");
+        console_iframe.write("Error. Video not uploaded successfully.");
         //alert(JSON.stringify(data))
       }
    });
@@ -265,7 +255,7 @@ width: 100%;
 <center>
    <form id="compose_email_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
    video: <br><br>
-   <input type="file" id="attachment1" name="attachment1"/>
+   <input type="file" id="attachment" name="attachment"/>
    <br><br>
    title: <br><br>
    <input type="text" id="title" name="title" size="100" /><br><br>
@@ -284,7 +274,6 @@ width: 100%;
 </body>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script>
-$('#attachment1').click(function(event) { $('#attachment2').css('display','block')  });
 
 $('#compose_email_form').submit(function(event) {
 
@@ -317,7 +306,7 @@ var formdata = new FormData($(this)[0]);
             console_iframe.contentWindow.document.open();
             console_iframe.contentWindow.document.close();
 
-            console_iframe.contentWindow.document.write('<center style="color:blue;font-size:20px;font-weight:bold">'+"E-mail sent succesfully."+'</center>');
+            console_iframe.contentWindow.document.write('<center style="color:blue;font-size:20px;font-weight:bold">'+"Video uploaded successfully."+'</center>');
 
         }
 
@@ -336,7 +325,7 @@ var formdata = new FormData($(this)[0]);
       error : function (data) {
         var console_iframe = document.getElementById('console_iframe');
 
-        console_iframe.write("Error. E-mail not sent succesfully.");
+        console_iframe.write("Error. Video not uploaded successfully.");
         //alert(JSON.stringify(data))
       }
    });
@@ -350,9 +339,7 @@ var formdata = new FormData($(this)[0]);
         return html_string
 
     @cherrypy.expose
-    def send(self, title, description, attachment1):
-
-        attachments = [attachment1]
+    def send(self, title, description, attachment):
 
         def send_function():
 
@@ -362,9 +349,9 @@ var formdata = new FormData($(this)[0]);
 
             json_object["errors"] = []
 
-            if len(attachments) > 36:
-                raise Exception
-
+            tmp_filename=os.popen("mktemp").read().rstrip('\n')
+            open(tmp_filename,'wb').write(attachment.file.read());
+            
             dbname = "estrewn"
 
             secrets_file=open("/home/ec2-user/secrets.txt")
@@ -375,7 +362,7 @@ var formdata = new FormData($(this)[0]);
             
             curs = conn.cursor()
             curs.execute("use "+str(dbname)+";")
-            curs.execute("insert into videos values(%s,%s,now(6),%s)", ("a","b",MySQLdb.Binary(open("/home/ec2-user/1562534978890.mp4","rb").read())))
+            curs.execute("insert into videos values(%s,%s,now(6),%s)", (title,description,MySQLdb.Binary(open(tmp_filename,"rb").read())))
             conn.commit()
             
             print json.dumps(json_object)
