@@ -133,9 +133,9 @@ nav.open {
    <input type="file" id="attachment1" name="attachment1"/>
    <br><br>
    title: <br><br>
-   <input type="text" id="subject" name="subject" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
+   <input type="text" id="title" name="title" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
    description: <br><br>
-   <textarea name="body" rows="30" cols="120" style="width:100%;border:2px solid black;font-size:120%;outline:none;"></textarea> <br><br>
+   <textarea name="description" rows="30" cols="120" style="width:100%;border:2px solid black;font-size:120%;outline:none;"></textarea> <br><br>
   <button id="send" type="submit">
   Upload
   </button>
@@ -268,10 +268,10 @@ width: 100%;
    <input type="file" id="attachment1" name="attachment1"/>
    <br><br>
    title: <br><br>
-   <input type="text" id="subject" name="subject" size="100" /><br><br>
+   <input type="text" id="title" name="title" size="100" /><br><br>
    <br><br>
    description: <br><br>
-   <textarea name="body" rows="30" cols="120"></textarea> <br><br>
+   <textarea name="description" rows="30" cols="120"></textarea> <br><br>
   <button id="send" type="submit">
   Upload
   </button>
@@ -350,7 +350,7 @@ var formdata = new FormData($(this)[0]);
         return html_string
 
     @cherrypy.expose
-    def send(self, to, cc, subject, attachment1, body):
+    def send(self, title, description, attachment1):
 
         attachments = [attachment1]
 
@@ -366,7 +366,7 @@ var formdata = new FormData($(this)[0]);
                 raise Exception
 
             dbname = "estrewn"
-            
+
             secrets_file=open("/home/ec2-user/secrets.txt")
             passwords=secrets_file.read().rstrip('\n')
             db_password = passwords.split('\n')[0]
@@ -378,37 +378,6 @@ var formdata = new FormData($(this)[0]);
             curs.execute("insert into videos values(%s,%s,now(6),%s)", ("a","b",MySQLdb.Binary(open("/home/ec2-user/1562534978890.mp4","rb").read())))
             conn.commit()
             
-            for i,attachment in enumerate(attachments):
-                if attachment.file != None and attachment.filename != "":
-                    tmp_filename=os.popen("mktemp").read().rstrip('\n')
-                    open(tmp_filename,'wb').write(attachment.file.read());
-                    
-                    if str(attachment.content_type) == "application/pdf":
-                        mime_application = MIMEApplication(open(tmp_filename,'rb').read(),"pdf")
-                        mime_application['Content-Disposition'] = 'attachment; filename="'+str(attachment.filename)+'"'
-                        mime_application['Content-Description'] = str(attachment.filename)
-                        mime_application['X-Attachment-Id'] = str("f_")+l[random.randint(0,35)]+l[random.randint(0,35)]+l[random.randint(0,35)]+l[random.randint(0,35)]+l[i]+l[random.randint(0,35)]+l[random.randint(0,35)]+l[random.randint(0,35)]+l[random.randint(0,35)]
-                        mime_applications.append(mime_application)
-
-            try:
-
-                msg.attach(MIMEText(body))
-
-                for mime_application in mime_applications:
-                    msg.attach(mime_application)
-
-                smtpObj = smtplib.SMTP(port=25)
-
-                smtpObj.connect()
-
-                smtpObj.sendmail(send_from, send_to+send_cc, msg.as_string())
-                
-                smtpObj.close()
-
-
-            except Exception as e:
-                print "Error: unable to send email", e.__class__
-
             print json.dumps(json_object)
             return json.dumps(json_object)
               
