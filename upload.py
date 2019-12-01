@@ -366,8 +366,15 @@ var formdata = new FormData($(this)[0]);
             
             curs = conn.cursor()
             curs.execute("use "+str(dbname)+";")
-            curs.execute("insert into videos values(%s,%s,%s,now(6),%s)", (username,title,description,MySQLdb.Binary(open(tmp_filename,"rb").read())))
+            curs.execute("insert into videos values(NULL,%s,%s,%s,now(6),%s)", (username,title,description,MySQLdb.Binary(open(tmp_filename,"rb").read())))
             conn.commit()
+
+            curs.execute("SELECT LAST_INSERT_ID()")
+            conn.commit()
+
+            print "unique_id = "+str(curs.fetchall()[0][0])
+            
+            conn.close()
             
             print json.dumps(json_object)
             return json.dumps(json_object)
