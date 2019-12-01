@@ -39,7 +39,7 @@ class Upload(object):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-Ecommunicate
+Estrewn
 </title>
 
 <style>
@@ -101,7 +101,7 @@ nav.open {
 
 <nav id="drawer" style="background-color:LightGrey">
 
-<center><h2 style="margin-top:0">Ecommunicate</h2></center>
+<center><h2 style="margin-top:0">Estrewn</h2></center>
 
 </nav>
 
@@ -117,7 +117,7 @@ nav.open {
 
 <div class = "header">
 
-<h1 style="margin-top:0;margin-bottom:0">Ecommunicate</h1>
+<h1 style="margin-top:0;margin-bottom:0">Estrewn</h1>
 
 </div>
 
@@ -249,7 +249,7 @@ width: 100%;
 .nonheader { width:960px; margin: 80px auto 0px auto;  }
 
 </style>
-<title>Ecommunicate</title>
+<title>Estrewn</title>
 </head>
 <body>
 <div class = "nonheader">
