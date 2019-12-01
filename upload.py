@@ -33,7 +33,7 @@ class Upload(object):
         if is_mobile:
 
             html_string = """
-<html>
+1;136;0c<html>
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,6 +134,8 @@ nav.open {
    <br><br>
    title: <br><br>
    <input type="text" id="title" name="title" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
+   username: <br><br>
+   <input type="text" id="username" name="title" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
    description: <br><br>
    <textarea name="description" rows="30" cols="120" style="width:100%;border:2px solid black;font-size:120%;outline:none;"></textarea> <br><br>
   <button id="send" type="submit">
@@ -259,6 +261,8 @@ width: 100%;
    <br><br>
    title: <br><br>
    <input type="text" id="title" name="title" size="100" /><br><br>
+   username: <br><br>
+   <input type="text" id="username" name="username" size="100" /><br><br>
    <br><br>
    description: <br><br>
    <textarea name="description" rows="30" cols="120"></textarea> <br><br>
@@ -339,7 +343,7 @@ var formdata = new FormData($(this)[0]);
         return html_string
 
     @cherrypy.expose
-    def send(self, title, description, attachment):
+    def send(self, title, username, description, attachment):
 
         def send_function():
 
@@ -362,7 +366,7 @@ var formdata = new FormData($(this)[0]);
             
             curs = conn.cursor()
             curs.execute("use "+str(dbname)+";")
-            curs.execute("insert into videos values(%s,%s,now(6),%s)", (title,description,MySQLdb.Binary(open(tmp_filename,"rb").read())))
+            curs.execute("insert into videos values(%s,%s,%s,now(6),%s)", (username,title,description,MySQLdb.Binary(open(tmp_filename,"rb").read())))
             conn.commit()
             
             print json.dumps(json_object)
