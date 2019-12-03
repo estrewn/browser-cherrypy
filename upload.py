@@ -3,21 +3,7 @@ import datetime
 import os
 import cherrypy
 
-import smtplib
-import email
-
-import mailbox
-
-from email.MIMEMultipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-from email.MIMEText import MIMEText
-
-import time
-
-import re
-
-import random
-
+from utils import is_mobile_user_agent
 
 import json
 
@@ -27,13 +13,13 @@ class Upload(object):
 
         is_mobile = False
 
-        if "User-Agent" in cherrypy.request.headers and ("Android" in cherrypy.request.headers['User-Agent'] or "iPhone" in cherrypy.request.headers['User-Agent'] or "iPad" in cherrypy.request.headers['User-Agent']):
+        if "User-Agent" in cherrypy.request.headers and is_mobile_user_agent(cherrypy.request.headers['User-Agent']):
             is_mobile = True
 
         if is_mobile:
 
             html_string = """
-1;136;0c<html>
+<html>
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,9 +86,12 @@ nav.open {
 <body>
 
 <nav id="drawer" style="background-color:LightGrey">
-
 <center><h2 style="margin-top:0">Estrewn</h2></center>
 
+<ul style="list-style:none;font-size:20px;padding-left:40px;">
+<li style="padding-bottom:20px"><a href="/">Home</a></li>
+<li style="padding-bottom:20px"><a href="/upload/">Upload</a></li>
+</ul>                                                                                                                                                                                    
 </nav>
 
 <main>
@@ -128,7 +117,7 @@ nav.open {
 <br>
 
 <center>
-   <form id="compose_email_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
+   <form id="upload_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
    video: <br><br>
    <input type="file" id="attachment" name="attachment"/>
    <br><br>
@@ -171,7 +160,7 @@ main.addEventListener('touchstart', function() {
 });
 
 
-$('#compose_email_form').submit(function(event) {
+$('#upload_form').submit(function(event) {
 
 var formdata = new FormData($(this)[0]); 
 
@@ -195,7 +184,7 @@ var formdata = new FormData($(this)[0]);
 
         if (json_object["success"]) {
 
-            $('#compose_email_form').hide();
+            $('#upload_form').hide();
 
             var console_iframe = document.getElementById('console_iframe');
 
@@ -248,14 +237,66 @@ width: 100%;
 
 .nonheader { width:960px; margin: 80px auto 0px auto;  }
 
+h1 { 
+margin-top: 0.0em;
+margin-bottom: 0.0em;
+}
+
+h3 { 
+margin-top: 0.0em;
+}
+
+.header1 {width:380px; float:left;}
+
+.nav {  
+float: right;
+padding: 20px 0px 0px 0px;
+text-align: right;
+}
+
+header {background-color: White}
+
+header { 
+position:fixed;
+top:0px; 
+left:0px;
+width:100%;
+height:60px;
+z-index:50; 
+}
+
+.page{
+width:960px;
+margin:0px auto 0px auto; 
+}
+
 </style>
 <title>Estrewn</title>
 </head>
 <body>
-<div class = "nonheader">
+
+<header>
+<div class = "page">
+<div class = "header1">
+<h1>Estrewn</h1>
+<h3>A pile of digital content</h3>
+
+</div>
+
+<div class="nav">
+
+<a href="/">Home</a> / <a href="/upload/">Upload</a>
+
+</div>
+
+</div>
+
+</header>
+
+<div class=\"nonheader\">
 
 <center>
-   <form id="compose_email_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
+   <form id="upload_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
    video: <br><br>
    <input type="file" id="attachment" name="attachment"/>
    <br><br>
@@ -279,7 +320,7 @@ width: 100%;
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script>
 
-$('#compose_email_form').submit(function(event) {
+$('#upload_form').submit(function(event) {
 
 var formdata = new FormData($(this)[0]); 
 
@@ -303,7 +344,7 @@ var formdata = new FormData($(this)[0]);
 
         if (json_object["success"]) {
 
-            $('#compose_email_form').hide();
+            $('#upload_form').hide();
 
             var console_iframe = document.getElementById('console_iframe');
 
