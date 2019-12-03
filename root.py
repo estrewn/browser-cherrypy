@@ -244,9 +244,9 @@ margin:0px auto 0px auto;
 </div>
 </header>
 
-<div class=\"nonheader\">
+<div class="nonheader">
 
-<div class=\"divider\"></div>\n
+<div class="divider"></div>\n
 
 <center><h1> Estrewn </h1></center>
 <center><h3>A pile of digital content</h3></center>

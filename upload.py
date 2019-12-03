@@ -293,7 +293,7 @@ margin:0px auto 0px auto;
 
 </header>
 
-<div class=\"nonheader\">
+<div class="nonheader">
 
 <center>
    <form id="upload_form" target="console_iframe" method="post" action="send" enctype="multipart/form-data">
