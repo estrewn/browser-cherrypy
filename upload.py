@@ -396,6 +396,15 @@ var formdata = new FormData($(this)[0]);
 
             tmp_filename=os.popen("mktemp").read().rstrip('\n')
             open(tmp_filename,'wb').write(attachment.file.read());
+
+            output=os.popen("clamscan  --stdout --quiet "+tmp_filename+" 2>&1").read()
+
+            if len(output) > 0:
+                os.system('echo '+tmp_filename+' | mail -s \"upload.py warning 1\" andrew.m.levin@vanderbilt.edu')
+                json_object["success"] = False
+                json_object["errors"].append("Uploaded file does not pass malware scanner")
+                print json.dumps(json_object)
+                return json.dumps(json_object)
             
             dbname = "estrewn"
 
