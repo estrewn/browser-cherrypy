@@ -1,3 +1,4 @@
+import MySQLdb
 import cherrypy
 
 import os
@@ -27,6 +28,44 @@ class Root(object):
     
     @cherrypy.expose
     def index(self):
+
+        secrets_file=open("/home/ec2-user/secrets.txt")
+
+        passwords=secrets_file.read().rstrip('\n')
+
+        db_password = passwords.split('\n')[0]
+        
+        dbname = "estrewn"
+
+        conn = MySQLdb.connect(host='estrewn-production-instance-1.cphov5mfizlt.us-west-2.rds.amazonaws.com', user='browser', passwd=db_password, port=3306) 
+
+        curs = conn.cursor()
+        
+        curs.execute("use "+str(dbname)+";")
+
+        curs.execute("select unique_id from videos order by upload_time desc;")
+
+        videos = curs.fetchall()
+
+        for video in videos:
+
+            assert(len(video) == 1)
+
+            curs.execute("select video from videos where unique_id="+str(video[0])+";")
+
+            open('/home/ec2-user/videos/'+str(video[0])+'.mp4','w').write(curs.fetchall()[0][0])
+        
+        conn.close()
+        
+        video_html_string = ""
+        
+        for video in videos:
+
+            assert(len(video) == 1)
+
+
+            
+            video_html_string += "<center><video width=\"640\" height=\"480\" controls>  <source src=\"/video/?video_id="+str(video[0])+"\" type=\"video/mp4\"></video></center>"
 
         is_mobile = False
         
@@ -127,11 +166,7 @@ background-color:#dae1e9;
 <center><h1> Estrewn </h1></center>
 <center><h3>A pile of digital content</h3></center>
 
-<center>
-<video width="640" height="480" controls>
-  <source src="/video" type="video/mp4">
-</video>
-</center>
+"""+video_html_string+"""
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script type="text/javascript">
@@ -231,11 +266,8 @@ margin:0px auto 0px auto;
 <center><h1> Estrewn </h1></center>
 <center><h3>A pile of digital content</h3></center>
 
-<center>
-<video width="640" height="480" controls>
-  <source src="/video" type="video/mp4">
-</video>
-</center>
+"""+video_html_string+"""
+
 </div>
 </body>
 </html>
