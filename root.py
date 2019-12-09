@@ -3,7 +3,7 @@ import cherrypy
 
 import os
 
-import mimetypes
+import time
 
 from cherrypy.lib import static
 
@@ -51,9 +51,45 @@ class Root(object):
 
             assert(len(video) == 1)
 
-            curs.execute("select video from videos where unique_id="+str(video[0])+";")
+            curs.execute("update videos set last_accessed_time = now(6) where unique_id="+str(video[0])+";")
 
-            open('/home/ec2-user/videos/'+str(video[0])+'.mp4','w').write(curs.fetchall()[0][0])
+            conn.commit()
+            
+            curs.execute("select IS_FREE_LOCK(\""+str(video[0])+"\")")
+
+            isfreelock = bool(curs.fetchall()[0][0])
+            
+            doesfileexist = os.path.isfile('/home/ec2-user/videos/'+str(video[0])+'.mp4')
+          
+            while not (isfreelock and doesfileexist):
+
+                time.sleep(1)
+                
+                curs.execute("select IS_FREE_LOCK(\""+str(video[0])+"\")")
+                
+                isfreelock = bool(curs.fetchall()[0][0])
+                    
+                doesfileexist = os.path.isfile('/home/ec2-user/videos/'+str(video[0])+'.mp4')
+
+                if (isfreelock and doesfileexist):
+                    break
+                elif not doesfileexist and isfreelock:
+                    curs.execute("select GET_LOCK(\""+str(video[0])+"\",10)")
+                       
+                    got_lock = bool(curs.fetch_all()[0][0])
+
+                    if got_lock:
+
+                        curs.execute("select video from videos where unique_id="+str(video[0])+";")
+                    
+                        open('/home/ec2-user/videos/'+str(video[0])+'.mp4','w').write(curs.fetchall()[0][0])
+
+                        curs.execute("select RELEASE_LOCK(\""+str(video[0])+"\")")
+
+                        break
+
+                        
+
         
         conn.close()
         
