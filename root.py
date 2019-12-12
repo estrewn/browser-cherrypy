@@ -76,7 +76,7 @@ class Root(object):
                 elif not doesfileexist and isfreelock:
                     curs.execute("select GET_LOCK(\""+str(video[0])+"\",10)")
                        
-                    got_lock = bool(curs.fetch_all()[0][0])
+                    got_lock = bool(curs.fetchall()[0][0])
 
                     if got_lock:
 
@@ -98,8 +98,6 @@ class Root(object):
         for video in videos:
 
             assert(len(video) == 1)
-
-
             
             video_html_string += "<center><video width=\"640\" height=\"480\" controls>  <source src=\"/video/?video_id="+str(video[0])+"\" type=\"video/mp4\"></video></center>"
 
