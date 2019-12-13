@@ -11,11 +11,11 @@ from utils import is_mobile_user_agent
 
 from upload import Upload
 
-from video import Video
+from stream import Stream
 
 class Root(object):
 
-    video = Video()
+    stream = Stream()
     
     _cp_config = {
         'tools.sessions.on': True,
@@ -99,7 +99,7 @@ class Root(object):
 
             assert(len(video) == 1)
             
-            video_html_string += "<center><video width=\"640\" height=\"480\" controls>  <source src=\"/video/?video_id="+str(video[0])+"\" type=\"video/mp4\"></video></center>"
+            video_html_string += "<center><video width=\"640\" height=\"480\" controls>  <source src=\"/stream/?video_id="+str(video[0])+"\" type=\"video/mp4\"></video></center>"
 
         is_mobile = False
         

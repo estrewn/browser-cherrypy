@@ -10,7 +10,7 @@ from utils import is_mobile_user_agent
 
 from upload import Upload
 
-class Video(object):
+class Stream(object):
     @cherrypy.expose
     def index(self,video_id):
 
