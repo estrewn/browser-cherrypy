@@ -9,29 +9,10 @@ from cherrypy.lib import static
 
 from utils import is_mobile_user_agent
 
-from upload import Upload
+class Video(object):
 
-from stream import Stream
-
-from video import Video
-
-class Root(object):
-
-    stream = Stream()
-
-    video = Video()    
-    
-    _cp_config = {
-        'tools.sessions.on': True,
-        'tools.auth.on': True,
-        'tools.sessions.locking': 'explicit', #this and the acquire_lock and the release_lock statements in the login and logout functions are necessary so that multiple ajax requests can be processed in parallel in a single session
-        'response.stream': True
-    }
-
-    upload = Upload()
-    
     @cherrypy.expose
-    def index(self):
+    def index(self,video_id):
 
         secrets_file=open("/home/ec2-user/secrets.txt")
 
@@ -47,63 +28,49 @@ class Root(object):
         
         curs.execute("use "+str(dbname)+";")
 
-        curs.execute("select unique_id from videos order by upload_time desc;")
+        curs.execute("update videos set last_accessed_time = now(6) where unique_id="+str(video_id)+";")
 
-        videos = curs.fetchall()
-
-        for video in videos:
-
-            assert(len(video) == 1)
-
-            curs.execute("update videos set last_accessed_time = now(6) where unique_id="+str(video[0])+";")
-
-            conn.commit()
+        conn.commit()
             
-            curs.execute("select IS_FREE_LOCK(\""+str(video[0])+"\")")
+        curs.execute("select IS_FREE_LOCK(\""+str(video_id)+"\")")
 
-            isfreelock = bool(curs.fetchall()[0][0])
+        isfreelock = bool(curs.fetchall()[0][0])
             
-            doesfileexist = os.path.isfile('/home/ec2-user/videos/'+str(video[0])+'.mp4')
+        doesfileexist = os.path.isfile('/home/ec2-user/videos/'+str(video_id)+'.mp4')
           
-            while not (isfreelock and doesfileexist):
+        while not (isfreelock and doesfileexist):
 
-                time.sleep(1)
+            time.sleep(1)
                 
-                curs.execute("select IS_FREE_LOCK(\""+str(video[0])+"\")")
+            curs.execute("select IS_FREE_LOCK(\""+str(video_id)+"\")")
                 
-                isfreelock = bool(curs.fetchall()[0][0])
+            isfreelock = bool(curs.fetchall()[0][0])
                     
-                doesfileexist = os.path.isfile('/home/ec2-user/videos/'+str(video[0])+'.mp4')
+            doesfileexist = os.path.isfile('/home/ec2-user/videos/'+str(video_id)+'.mp4')
 
-                if (isfreelock and doesfileexist):
+            if (isfreelock and doesfileexist):
+                break
+            elif not doesfileexist and isfreelock:
+                curs.execute("select GET_LOCK(\""+str(video_id)+"\",10)")
+                    
+                got_lock = bool(curs.fetchall()[0][0])
+
+                if got_lock:
+
+                    curs.execute("select video from videos where unique_id="+str(video_id)+";")
+                    
+                    open('/home/ec2-user/videos/'+str(video_id)+'.mp4','w').write(curs.fetchall()[0][0])
+
+                    curs.execute("select RELEASE_LOCK(\""+str(video_id)+"\")")
+
                     break
-                elif not doesfileexist and isfreelock:
-                    curs.execute("select GET_LOCK(\""+str(video[0])+"\",10)")
-                       
-                    got_lock = bool(curs.fetchall()[0][0])
-
-                    if got_lock:
-
-                        curs.execute("select video from videos where unique_id="+str(video[0])+";")
-                    
-                        open('/home/ec2-user/videos/'+str(video[0])+'.mp4','w').write(curs.fetchall()[0][0])
-
-                        curs.execute("select RELEASE_LOCK(\""+str(video[0])+"\")")
-
-                        break
 
                         
 
         
         conn.close()
         
-        video_html_string = ""
-        
-        for video in videos:
-
-            assert(len(video) == 1)
-            
-            video_html_string += "<center><video width=\"640\" height=\"480\" controls>  <source src=\"/stream/?video_id="+str(video[0])+"\" type=\"video/mp4\"></video></center>"
+        video_html_string = "<center><video width=\"640\" height=\"480\" controls>  <source src=\"/stream/?video_id="+str(video_id)+"\" type=\"video/mp4\"></video></center>"
 
         is_mobile = False
         
@@ -201,9 +168,6 @@ background-color:#dae1e9;
 </div>
 </div>
 
-<center><h1> Estrewn </h1></center>
-<center><h3>A pile of digital content</h3></center>
-
 """+video_html_string+"""
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>
@@ -300,9 +264,6 @@ margin:0px auto 0px auto;
 <div class="nonheader">
 
 <div class="divider"></div>\n
-
-<center><h1> Estrewn </h1></center>
-<center><h3>A pile of digital content</h3></center>
 
 """+video_html_string+"""
 
