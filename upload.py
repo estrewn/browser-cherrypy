@@ -79,6 +79,12 @@ nav.open {
     padding-right:1em;
 }
 
+.divider {
+width:100%;
+height:1px;
+background-color:#dae1e9;
+}
+
 </style>
 
 </head>
@@ -131,12 +137,10 @@ nav.open {
   Upload
   </button>
   </form>
-  <iframe name="console_iframe" id="console_iframe" class="terminal" /></iframe>
 </center>
 
 </div>
 
-</body>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script>
 
@@ -218,7 +222,7 @@ var formdata = new FormData($(this)[0]);
 
 });
 
-  </script>        
+</script>        
 
 <br>
 
@@ -280,6 +284,12 @@ width:960px;
 margin:0px auto 0px auto; 
 }
 
+.divider {
+width:100%;
+height:0.1em;
+background-color:#dae1e9;
+}
+
 </style>
 <title>Estrewn</title>
 </head>
@@ -321,7 +331,6 @@ margin:0px auto 0px auto;
   Upload
   </button>
   </form>
-  <iframe name="console_iframe" id="console_iframe" class="terminal" /></iframe>
 </center>
 
 </div>
