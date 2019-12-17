@@ -130,7 +130,7 @@ background-color:#dae1e9;
    title: <br><br>
    <input type="text" id="title" name="title" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
    username: <br><br>
-   <input type="text" id="username" name="title" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
+   <input type="text" id="username" name="username" style="width:100%;border:2px solid black;font-size:120%;outline:none;" /><br><br>
    description: <br><br>
    <textarea name="description" rows="30" cols="120" style="width:100%;border:2px solid black;font-size:120%;outline:none;"></textarea> <br><br>
   <button id="send" type="submit">
