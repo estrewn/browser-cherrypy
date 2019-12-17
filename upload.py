@@ -220,9 +220,19 @@ var formdata = new FormData($(this)[0]);
 
   </script>        
 
-</html>
+<br>
+
+<div class="divider"></div>
+
+<br>
+
+<center>This website is experimental at this point. You should expect bugs, unexpected downtime, etc. Please contact estrewn@gmail.com for comments, feature requests, etc.</center>
+
+<br><br>
 
 </body>
+
+</html>
 
 """
         else:
@@ -315,6 +325,16 @@ margin:0px auto 0px auto;
 </center>
 
 </div>
+
+<br>
+
+<div class="divider"></div>
+
+<br>
+
+<center>This website is experimental at this point. You should expect bugs, unexpected downtime, etc. Please contact estrewn@gmail.com for comments, feature requests, etc.</center>
+
+<br><br>
 
 </body>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.js"></script>

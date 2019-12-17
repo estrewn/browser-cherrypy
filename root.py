@@ -223,6 +223,16 @@ main.addEventListener('touchstart', function() {
 });
 </script>    
 
+<br>
+
+<div class="divider"></div>
+
+<br>
+
+<center>This website is experimental at this point. You should expect bugs, unexpected downtime, etc. Please contact estrewn@gmail.com for comments, feature requests, etc.</center>
+
+<br><br>
+
 </body>
 </html>
 
@@ -307,6 +317,17 @@ margin:0px auto 0px auto;
 """+video_html_string+"""
 
 </div>
+
+<br>
+
+<div class="divider"></div>
+
+<br>
+
+<center>This website is experimental at this point. You should expect bugs, unexpected downtime, etc. Please contact estrewn@gmail.com for comments, feature requests, etc.</center>
+
+<br><br>
+
 </body>
 </html>
 
